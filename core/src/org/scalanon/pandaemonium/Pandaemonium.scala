@@ -65,7 +65,7 @@ object Pandaemonium {
   var key: String     = _
 
   val screenPixel =
-    ((Geometry.ScreenWidth min Geometry.ScreenHeight) / 320).floor
+    ((Geometry.ScreenWidth min Geometry.ScreenHeight) / 25).floor
 
   var walkPlayer: TextureWrapper = _
 

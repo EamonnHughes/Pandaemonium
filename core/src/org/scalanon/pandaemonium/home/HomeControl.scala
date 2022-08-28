@@ -2,6 +2,7 @@ package org.scalanon.pandaemonium.home
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import org.scalanon.pandaemonium.{Geometry, Pandaemonium, Vec2}
 
 class HomeControl(home: Home) extends IconAdapter(Nil) {
   override def touchDown(
@@ -10,12 +11,23 @@ class HomeControl(home: Home) extends IconAdapter(Nil) {
       pointer: Int,
       button: Int
   ): Boolean = {
-    if (!home.ready) {
-      home.update(10f)
-      true
-    } else {
-      super.touchDown(screenX, screenY, pointer, button)
-    }
+    home.StartMenu.click(
+      Vec2(
+        screenX / Pandaemonium.screenPixel,
+        (Geometry.ScreenHeight - screenY) / Pandaemonium.screenPixel
+      )
+    )
+    true
+  }
+
+  override def mouseMoved(screenX: Int, screenY: Int): Boolean = {
+    home.StartMenu.hover(
+      Vec2(
+        screenX / Pandaemonium.screenPixel,
+        (Geometry.ScreenHeight - screenY) / Pandaemonium.screenPixel
+      )
+    )
+    true
   }
 
   override def keyDown(keycode: Int): Boolean = {
@@ -27,12 +39,15 @@ class HomeControl(home: Home) extends IconAdapter(Nil) {
 
   override def keyUp(keycode: Int): Boolean = {
     if (keycode == Keys.SPACE || keycode == Keys.ENTER) {
-      if (!home.ready) {
-        home.update(10f)
-      } else {
-        home.play()
-      }
+      home.StartMenu.used()
     }
+    if (keycode == Keys.UP) {
+      home.StartMenu.up()
+    }
+    if (keycode == Keys.DOWN) {
+      home.StartMenu.down()
+    }
+
     true
   }
 }

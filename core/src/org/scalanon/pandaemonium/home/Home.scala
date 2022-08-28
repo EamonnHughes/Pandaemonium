@@ -3,18 +3,33 @@ package home
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
+import org.scalanon.pandaemonium.menu.{NavMenu, menuItem}
 
 class Home() extends Scene {
 
   import Home._
 
-  var state: State = HomeState
-  var logoAlpha    = 0f
-  var playAlpha    = 0f
-  var ufoPos       = 0f
-  var alienPos     = 0f
-  var discard      = false
-  var ready        = false
+  var state: State       = HomeState
+  var logoAlpha          = 0f
+  var playAlpha          = 0f
+  var ufoPos             = 0f
+  var alienPos           = 0f
+  var discard            = false
+  var start              = false
+  var StartMenu: NavMenu = NavMenu(
+    List[menuItem](
+      menuItem("BEGIN", () => { start = true }),
+      menuItem("EXIT", () => { System.exit(666) })
+    ),
+    Vec2(
+      Geometry.ScreenWidth / (2 * Pandaemonium.screenPixel),
+      Geometry.ScreenHeight / (2 * Pandaemonium.screenPixel) - 1
+    ),
+    2,
+    6,
+    Color.RED,
+    Color.BLACK
+  )
 
   override def init(): HomeControl = {
     state = HomeState
@@ -31,11 +46,12 @@ class Home() extends Scene {
     Text.draw(
       batch,
       Text.tinyFont,
-      Color.DARK_GRAY ⍺ (.25f * playAlpha),
-      s"v${Pandaemonium.version}",
+      Color.WHITE,
+      s"PANDAEMONIUM v0.1",
       l =>
         (Geometry.ScreenWidth - l.width - Geometry.Dimension / 4) -> (l.height + Geometry.Dimension / 4)
     )
+    StartMenu.draw(batch)
   }
 
   def play(): Unit = {
@@ -55,7 +71,7 @@ object Home {
   val LogoFadeOutSeconds = .5f
   val PlayFadeOutSeconds = .3f
 
-  val Title = "TAKE ME TO YOUR LEADER!"
+  val Title = "Pandaemonium"
 
   val HighScoreColor = new Color(.7f, .7f, .7f, 1f)
 

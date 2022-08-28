@@ -19,11 +19,11 @@ object Text {
     )
     val parameter = new FreeTypeFontGenerator.FreeTypeFontParameter
     parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS + CharExtras
-    parameter.size = (Dimension * 3 / 4).toInt
+    parameter.size = Pandaemonium.screenPixel.toInt * 2
     mediumFont = garbage.add(generator.generateFont(parameter))
-    parameter.size = (Dimension * 9 / 16).toInt
+    parameter.size = Pandaemonium.screenPixel.toInt
     smallFont = garbage.add(generator.generateFont(parameter))
-    parameter.size = (Dimension * 3 / 8).toInt
+    parameter.size = Pandaemonium.screenPixel.toInt / 2
     tinyFont = garbage.add(generator.generateFont(parameter))
     generator.dispose()
   }
