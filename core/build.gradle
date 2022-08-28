@@ -1,0 +1,46 @@
+plugins {
+    id 'scala'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+compileScala {
+    scalaCompileOptions.optimize = true
+    scalaCompileOptions.additionalParameters = ['-target:jvm-1.8',  '-feature',
+                                                '-language:postfixOps', '-language:implicitConversions']
+
+}
+
+[compileJava, compileTestJava, compileScala]*.options*.encoding = 'UTF-8'
+
+//sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.main.scala.srcDirs = [ "src/" ]
+sourceSets.main.resources.srcDirs = [ "res/" ]
+
+eclipse.project.name = appName + "-core"
+
+dependencies {
+    implementation 'org.scala-lang:scala-library:2.13.8'
+    implementation 'io.circe:circe-core_2.13:0.15.0-M1'
+    implementation 'io.circe:circe-generic_2.13:0.15.0-M1'
+    implementation 'io.circe:circe-parser_2.13:0.15.0-M1'
+}
+
+def postKey
+
+def localProperties = project.file("../local.properties")
+
+if (localProperties.exists()) {
+    Properties properties = new Properties()
+    localProperties.withInputStream { instr ->
+        properties.load(instr)
+        postKey = properties.getProperty('post.key')
+    }
+}
+
+processResources {
+    filesMatching("*.properties") {
+        expand(version: version, key: postKey)
+    }
+}
