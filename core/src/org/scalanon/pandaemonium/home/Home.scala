@@ -3,6 +3,7 @@ package home
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
+import org.scalanon.pandaemonium.game.Game
 import org.scalanon.pandaemonium.menu.{NavMenu, menuItem}
 
 class Home() extends Scene {
@@ -10,15 +11,9 @@ class Home() extends Scene {
   import Home._
 
   var state: State       = HomeState
-  var logoAlpha          = 0f
-  var playAlpha          = 0f
-  var ufoPos             = 0f
-  var alienPos           = 0f
-  var discard            = false
-  var start              = false
   var StartMenu: NavMenu = NavMenu(
     List[menuItem](
-      menuItem("BEGIN", () => { start = true }),
+      menuItem("BEGIN", () => { state = PlayState }),
       menuItem("EXIT", () => { System.exit(666) })
     ),
     Vec2(
@@ -37,8 +32,11 @@ class Home() extends Scene {
   }
 
   override def update(delta: Float): Option[Scene] = {
-
-    None
+    state match {
+      case PlayState =>
+        Some(new Game)
+      case HomeState => None
+    }
   }
 
   override def render(batch: PolygonSpriteBatch): Unit = {
