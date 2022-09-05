@@ -3,7 +3,8 @@ package org.scalanon.pandaemonium
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 
 case class Cube(lX: Float, lY: Float) extends Entity {
-  def y: Float   = lY - Pandaemonium.screenPixel
+  def y: Float   = lY
+  def x: Float   = lX
   def draw(batch: PolygonSpriteBatch): Unit = {
     batch.draw(
       cubeSprite,

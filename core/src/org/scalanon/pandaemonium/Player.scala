@@ -12,7 +12,8 @@ case class Player(game: Game) extends Entity {
   def PlayerStill: TextureWrapper = AssetLoader.image("PlayerStillSheet.png")
   var direction: Vec2             = Vec2(0, 0)
   var state: Player.Action        = Player.still
-  def y: Float                    = loc.y - Pandaemonium.screenPixel
+  def y: Float                    = loc.y
+  def x: Float                    = loc.x
   def PlayerCurrent: TextureWrapper = {
     state match {
       case Player.still =>
@@ -80,7 +81,32 @@ case class Player(game: Game) extends Entity {
     } else {
       state = Player.still
     }
-    loc += (direction * Pandaemonium.screenPixel * 4 * delta)
+    var moveC = (direction * Pandaemonium.screenPixel * 4 * delta)
+    game.everything
+      .filterNot(e => e eq this)
+      .foreach(ev => {
+        var xFromY =
+          Math.abs(
+            (ev.y - loc.y - Pandaemonium.screenPixel * 2) * 2
+          ) min Pandaemonium.screenPixel * 2
+        var yFromX = Math.abs(
+          (ev.x - loc.x - Pandaemonium.screenPixel * 2) / 2
+        ) min Pandaemonium.screenPixel
+
+        if (
+          loc.x < ev.x - xFromY * 2 && loc.x + moveC.x >= ev.x - xFromY * 2 && (loc.y >= ev.y - Pandaemonium.screenPixel * 2 || loc.y <= ev.y + Pandaemonium.screenPixel * 2)
+        ) {
+          moveC.x = (ev.x - loc.x - (xFromY * 2))
+        }
+        if (
+          loc.x > ev.x + xFromY * 2 && loc.x + moveC.x <= ev.x + xFromY * 2 && (loc.y >= ev.y - Pandaemonium.screenPixel * 2 || loc.y <= ev.y + Pandaemonium.screenPixel * 2)
+        ) {
+          moveC.x = (loc.x - ev.x - (xFromY * 2))
+
+        }
+
+      })
+    loc += moveC
   }
 
   def update(delta: Float): Unit = {

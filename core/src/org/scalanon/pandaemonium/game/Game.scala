@@ -11,7 +11,7 @@ import sun.security.ec.point.ProjectivePoint.Mutable
 
 class Game() extends Scene {
   var mouseLoc: Vec2 = Vec2(0, 0)
-  var cube           = Cube(Geometry.ScreenWidth / 2, Geometry.ScreenHeight / 2)
+  var cube           = Cube(Geometry.ScreenWidth / 3, Geometry.ScreenHeight / 3)
   val control        = new GameControl(this)
 
   var player: Player         = Player(this)
