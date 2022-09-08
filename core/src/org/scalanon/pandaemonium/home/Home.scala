@@ -5,13 +5,15 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import org.scalanon.pandaemonium.game.Game
 import org.scalanon.pandaemonium.menu.{NavMenu, menuItem}
+import org.scalanon.pandaemonium.util.TextureWrapper
 
 class Home() extends Scene {
 
   import Home._
 
-  var state: State       = HomeState
-  var StartMenu: NavMenu = NavMenu(
+  var state: State         = HomeState
+  def icon: TextureWrapper = AssetLoader.image("Icon.png")
+  var StartMenu: NavMenu   = NavMenu(
     List[menuItem](
       menuItem("BEGIN", () => { state = PlayState }),
       menuItem("EXIT", () => { System.exit(666) })
@@ -40,6 +42,14 @@ class Home() extends Scene {
   }
 
   override def render(batch: PolygonSpriteBatch): Unit = {
+    batch.setColor(Color.WHITE)
+    batch.draw(
+      icon,
+      (Geometry.ScreenWidth - (Geometry.ScreenHeight)) / 2,
+      0,
+      Geometry.ScreenHeight,
+      Geometry.ScreenHeight
+    )
 
     Text.draw(
       batch,

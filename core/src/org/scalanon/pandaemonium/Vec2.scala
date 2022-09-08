@@ -40,6 +40,14 @@ final case class Vec2(var x: Float, var y: Float) {
     x += v.x * mul
     y += v.y * mul
   }
+
+  def distanceFrom(v2: Vec2): Float = {
+    Math.sqrt(((x - v2.x) * (x - v2.x)) + ((y - v2.y) * (y - v2.y))).toFloat
+  }
+
+  def manhattanDistance(v2: Vec2): Float = {
+    (x - v2.x).abs + (y - v2.y).abs * 2
+  }
 }
 
 object Vec2 {

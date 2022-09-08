@@ -70,14 +70,6 @@ case class NavMenu(
 
       var listDrawn: List[menuItem] =
         itList.slice(startDrawingAt, startDrawingAt + length)
-      batch.setColor(unSelCol)
-      batch.draw(
-        Square,
-        (location.x) * Pandaemonium.screenPixel,
-        (location.y - (length * 2)) * Pandaemonium.screenPixel,
-        lX * Pandaemonium.screenPixel,
-        2 * Pandaemonium.screenPixel * length
-      )
 
       batch.setColor(selCol)
       batch.draw(

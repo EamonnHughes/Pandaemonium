@@ -81,28 +81,24 @@ case class Player(game: Game) extends Entity {
     } else {
       state = Player.still
     }
-    var moveC = (direction * Pandaemonium.screenPixel * 4 * delta)
+    var moveC = Vec2(
+      direction.x * Pandaemonium.screenPixel * 4 * delta,
+      direction.y * Pandaemonium.screenPixel * 2 * delta
+    )
     game.everything
       .filterNot(e => e eq this)
       .foreach(ev => {
-        var xFromY =
-          Math.abs(
-            (ev.y - loc.y - Pandaemonium.screenPixel * 2) * 2
-          ) min Pandaemonium.screenPixel * 2
-        var yFromX = Math.abs(
-          (ev.x - loc.x - Pandaemonium.screenPixel * 2) / 2
-        ) min Pandaemonium.screenPixel
-
         if (
-          loc.x < ev.x - xFromY * 2 && loc.x + moveC.x >= ev.x - xFromY * 2 && (loc.y >= ev.y - Pandaemonium.screenPixel * 2 || loc.y <= ev.y + Pandaemonium.screenPixel * 2)
+          (loc + Vec2(moveC.x, 0))
+            .manhattanDistance(ev.loc) <= Pandaemonium.screenPixel * 2
         ) {
-          moveC.x = (ev.x - loc.x - (xFromY * 2))
+          moveC.x = 0
         }
         if (
-          loc.x > ev.x + xFromY * 2 && loc.x + moveC.x <= ev.x + xFromY * 2 && (loc.y >= ev.y - Pandaemonium.screenPixel * 2 || loc.y <= ev.y + Pandaemonium.screenPixel * 2)
+          (loc + Vec2(0, moveC.y))
+            .manhattanDistance(ev.loc) <= Pandaemonium.screenPixel * 2
         ) {
-          moveC.x = (loc.x - ev.x - (xFromY * 2))
-
+          moveC.y = 0
         }
 
       })
