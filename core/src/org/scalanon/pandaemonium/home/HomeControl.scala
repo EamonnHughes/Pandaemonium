@@ -41,10 +41,10 @@ class HomeControl(home: Home) extends IconAdapter(Nil) {
     if (keycode == Keys.SPACE || keycode == Keys.ENTER) {
       home.StartMenu.used()
     }
-    if (keycode == Keys.UP) {
+    if (keycode == Keys.UP || keycode == Keys.W) {
       home.StartMenu.up()
     }
-    if (keycode == Keys.DOWN) {
+    if (keycode == Keys.DOWN || keycode == Keys.S) {
       home.StartMenu.down()
     }
 

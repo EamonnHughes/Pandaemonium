@@ -71,26 +71,20 @@ case class NavMenu(
       var listDrawn: List[menuItem] =
         itList.slice(startDrawingAt, startDrawingAt + length)
 
-      batch.setColor(selCol)
-      batch.draw(
-        Square,
-        (location.x - (lX / 2)) * Pandaemonium.screenPixel,
-        (location.y - ((selected * 2) + 2 - startDrawingAt)) * Pandaemonium.screenPixel,
-        lX * Pandaemonium.screenPixel,
-        Pandaemonium.screenPixel * 2
-      )
-
       listDrawn.zipWithIndex.foreach({ case (item, index) =>
-        val color = if (index + startDrawingAt != selected) selCol else unSelCol
+        val color = if (index + startDrawingAt != selected) unSelCol else selCol
+        val font  =
+          if (index + startDrawingAt != selected) Text.smallFont
+          else Text.mediumFont
         Text.draw(
           batch,
-          Text.mediumFont,
+          font,
           color,
           item.name,
           layout =>
             (
               (location.x) * Pandaemonium.screenPixel - layout.width / 2,
-              (location.y - index * 2) * Pandaemonium.screenPixel
+              (location.y - index * 32) * Pandaemonium.screenPixel
             )
         )
       })

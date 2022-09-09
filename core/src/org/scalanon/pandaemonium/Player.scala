@@ -24,7 +24,9 @@ case class Player(game: Game) extends Entity {
   }
   var loc: Vec2                   = Vec2(Geometry.ScreenWidth / 2, Geometry.ScreenHeight / 2)
   def dir: Float = {
-    MathUtils.atan2(game.mouseLoc.y - loc.y, game.mouseLoc.x - loc.x).degrees
+    MathUtils
+      .atan2(game.mouseLoc.y - loc.y / 2, game.mouseLoc.x - loc.x)
+      .degrees
   }
   def dirAn: Int = {
     if (dir < -68 && dir >= -112) { 7 }
@@ -81,32 +83,48 @@ case class Player(game: Game) extends Entity {
     } else {
       state = Player.still
     }
-    var moveC = Vec2(
-      direction.x * Pandaemonium.screenPixel * 4 * delta,
-      direction.y * Pandaemonium.screenPixel * 2 * delta
-    )
-    game.everything
-      .filterNot(e => e eq this)
-      .foreach(ev => {
-        if (
-          (loc + Vec2(moveC.x, 0))
-            .manhattanDistance(ev.loc) <= Pandaemonium.screenPixel * 2
-        ) {
-          moveC.x = 0
+    val dX     = direction.x * Pandaemonium.screenPixel * 70 * delta
+    val dY     = direction.y * Pandaemonium.screenPixel * 70 * delta
+    val tmpLoc = new Vec2(loc.x + dX, loc.y + dY)
+    if (canMoveTo(tmpLoc)) {
+      loc.set(tmpLoc)
+    } else {
+      val px    = (loc.x / Pandaemonium.screenPixel).round
+      val py    = (loc.y / Pandaemonium.screenPixel).round
+      var dPX   = (dX / Pandaemonium.screenPixel).round
+      var dPY   = (dY / Pandaemonium.screenPixel).round
+      var moved = false
+      tmpLoc.set(px * Pandaemonium.screenPixel, py * Pandaemonium.screenPixel)
+      while (moved) {
+        moved = false
+        val dDPX = dPX.sign
+        val dDPY = dPY.sign
+        tmpLoc.x += dDPX * Pandaemonium.screenPixel
+        if (canMoveTo(tmpLoc)) {
+          loc.set(tmpLoc)
+          moved = true
         }
-        if (
-          (loc + Vec2(0, moveC.y))
-            .manhattanDistance(ev.loc) <= Pandaemonium.screenPixel * 2
-        ) {
-          moveC.y = 0
+        tmpLoc.y += dDPY * Pandaemonium.screenPixel
+        if (canMoveTo(tmpLoc)) {
+          loc.set(tmpLoc)
+          moved = true
         }
+        dPX -= dDPX
+        dPY -= dDPY
+      }
+    }
+  }
 
-      })
-    loc += moveC
+  private def canMoveTo(newLoc: Vec2): Boolean = {
+    game.everything
+      .forall(e =>
+        (e eq this) || newLoc.manhattanDistance(
+          e.loc
+        ) >= Pandaemonium.screenPixel * 32
+      )
   }
 
   def update(delta: Float): Unit = {
-    println(dir + "  " + dirAn + "  " + loc)
     animate(delta)
     move(delta)
 
@@ -117,12 +135,12 @@ case class Player(game: Game) extends Entity {
     batch.setColor(Color.WHITE)
     batch.draw(
       PlayerCurrent,
-      loc.x - Pandaemonium.screenPixel,
-      loc.y - Pandaemonium.screenPixel,
+      loc.x - (Pandaemonium.screenPixel * 16),
+      (loc.y - (Pandaemonium.screenPixel * 16)) / 2,
       0,
       0,
-      Pandaemonium.screenPixel * 2,
-      Pandaemonium.screenPixel * 4,
+      Pandaemonium.screenPixel * 32,
+      Pandaemonium.screenPixel * 64,
       1,
       1,
       0,

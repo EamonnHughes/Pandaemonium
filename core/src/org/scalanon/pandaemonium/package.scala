@@ -47,6 +47,8 @@ package object pandaemonium {
 
     def degrees: Float = self * MathUtils.radiansToDegrees
 
+    def floorToZero: Float = if (self < 0) self.ceil else self.floor
+
     // clamp to [-180f,180f]
     def onCircle: Float =
       if (self < -180f) self + 360f * ((180f - self) / 360f).floor

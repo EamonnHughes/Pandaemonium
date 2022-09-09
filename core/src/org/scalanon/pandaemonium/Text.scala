@@ -15,15 +15,15 @@ import org.scalanon.pandaemonium.util.GarbageCan
 object Text {
   def loadFonts()(implicit garbage: GarbageCan): Unit = {
     val generator = new FreeTypeFontGenerator(
-      Gdx.files.internal("NovaMono-Regular.ttf")
+      Gdx.files.internal("VT323-Regular.ttf")
     )
     val parameter = new FreeTypeFontGenerator.FreeTypeFontParameter
     parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS + CharExtras
-    parameter.size = Pandaemonium.screenPixel.toInt * 2
+    parameter.size = Pandaemonium.screenPixel.toInt * 32
     mediumFont = garbage.add(generator.generateFont(parameter))
-    parameter.size = Pandaemonium.screenPixel.toInt
+    parameter.size = Pandaemonium.screenPixel.toInt * 28
     smallFont = garbage.add(generator.generateFont(parameter))
-    parameter.size = Pandaemonium.screenPixel.toInt / 2
+    parameter.size = Pandaemonium.screenPixel.toInt * 4
     tinyFont = garbage.add(generator.generateFont(parameter))
     generator.dispose()
   }

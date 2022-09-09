@@ -3,6 +3,7 @@ package game
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
+import org.scalanon.pandaemonium.Cube
 import org.scalanon.pandaemonium.game.Game._
 import org.scalanon.pandaemonium.home.Home
 import org.scalanon.pandaemonium.menu.{NavMenu, menuItem}
@@ -10,14 +11,71 @@ import org.scalanon.pandaemonium.util.TextureWrapper
 import sun.security.ec.point.ProjectivePoint.Mutable
 
 class Game() extends Scene {
-  var mouseLoc: Vec2 = Vec2(0, 0)
-  var cube           = Cube(Geometry.ScreenWidth / 3, Geometry.ScreenHeight / 3)
-  val control        = new GameControl(this)
+  var mouseLoc: Vec2    = Vec2(0, 0)
+  var cubes: List[Cube] = List(
+    Cube(
+      Pandaemonium.screenPixel * 1 * 16,
+      Pandaemonium.screenPixel * 5 * 16
+    ),
+    Cube(
+      Pandaemonium.screenPixel * 2 * 16,
+      Pandaemonium.screenPixel * 4 * 16
+    ),
+    Cube(
+      Pandaemonium.screenPixel * 2 * 16,
+      Pandaemonium.screenPixel * 6 * 16
+    ),
+    Cube(
+      Pandaemonium.screenPixel * 3 * 16,
+      Pandaemonium.screenPixel * 3 * 16
+    ),
+    Cube(
+      Pandaemonium.screenPixel * 3 * 16,
+      Pandaemonium.screenPixel * 7 * 16
+    ),
+    Cube(
+      Pandaemonium.screenPixel * 4 * 16,
+      Pandaemonium.screenPixel * 2 * 16
+    ),
+    Cube(
+      Pandaemonium.screenPixel * 4 * 16,
+      Pandaemonium.screenPixel * 8 * 16
+    ),
+    Cube(
+      Pandaemonium.screenPixel * 5 * 16,
+      Pandaemonium.screenPixel * 1 * 16
+    ),
+    Cube(
+      Pandaemonium.screenPixel * 5 * 16,
+      Pandaemonium.screenPixel * 9 * 16
+    ),
+    Cube(
+      Pandaemonium.screenPixel * 6 * 16,
+      Pandaemonium.screenPixel * 2 * 16
+    ),
+    Cube(
+      Pandaemonium.screenPixel * 6 * 16,
+      Pandaemonium.screenPixel * 8 * 16
+    ),
+    Cube(
+      Pandaemonium.screenPixel * 7 * 16,
+      Pandaemonium.screenPixel * 3 * 16
+    ),
+    Cube(
+      Pandaemonium.screenPixel * 8 * 16,
+      Pandaemonium.screenPixel * 4 * 16
+    ),
+    Cube(
+      Pandaemonium.screenPixel * 9 * 16,
+      Pandaemonium.screenPixel * 5 * 16
+    )
+  )
+  val control           = new GameControl(this)
 
   var player: Player         = Player(this)
   var state: State           = PlayState
   def everything: List[Entity] = {
-    List(player, cube)
+    (player :: cubes)
       .sortBy(e => -e.y)
   }
   override def init(): GameControl = {

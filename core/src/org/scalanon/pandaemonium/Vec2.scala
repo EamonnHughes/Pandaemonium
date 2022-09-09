@@ -1,6 +1,16 @@
 package org.scalanon.pandaemonium
 
 final case class Vec2(var x: Float, var y: Float) {
+  def set(x: Float, y: Float): Unit = {
+    this.x = x
+    this.y = y
+  }
+
+  def set(v: Vec2): Unit = {
+    this.x = v.x
+    this.y = v.y
+  }
+
   def +(vec22: Vec2): Vec2 = {
     Vec2(
       this.x + vec22.x,
@@ -46,7 +56,7 @@ final case class Vec2(var x: Float, var y: Float) {
   }
 
   def manhattanDistance(v2: Vec2): Float = {
-    (x - v2.x).abs + (y - v2.y).abs * 2
+    (x - v2.x).abs + (y - v2.y).abs
   }
 }
 

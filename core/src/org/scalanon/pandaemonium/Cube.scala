@@ -9,10 +9,10 @@ case class Cube(lX: Float, lY: Float) extends Entity {
   def draw(batch: PolygonSpriteBatch): Unit = {
     batch.draw(
       cubeSprite,
-      lX - Pandaemonium.screenPixel,
-      lY - Pandaemonium.screenPixel,
-      Pandaemonium.screenPixel * 2,
-      Pandaemonium.screenPixel * 4
+      lX - (Pandaemonium.screenPixel * 16),
+      (lY / 2) - (Pandaemonium.screenPixel * 8),
+      Pandaemonium.screenPixel * 32,
+      Pandaemonium.screenPixel * 64
     )
   }
   def cubeSprite = AssetLoader.image("Cube.png")

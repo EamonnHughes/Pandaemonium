@@ -20,12 +20,12 @@ class Home() extends Scene {
     ),
     Vec2(
       Geometry.ScreenWidth / (2 * Pandaemonium.screenPixel),
-      Geometry.ScreenHeight / (2 * Pandaemonium.screenPixel) - 1
+      (Geometry.ScreenHeight / (2 * Pandaemonium.screenPixel)) + 16
     ),
     2,
     6,
     Color.RED,
-    Color.BLACK
+    new Color(0.2f, 0f, 0f, 1)
   )
 
   override def init(): HomeControl = {
@@ -33,7 +33,10 @@ class Home() extends Scene {
     new HomeControl(this)
   }
 
+  var rot = 0f
+
   override def update(delta: Float): Option[Scene] = {
+    rot += 10 * delta
     state match {
       case PlayState =>
         Some(new Game)
@@ -42,13 +45,24 @@ class Home() extends Scene {
   }
 
   override def render(batch: PolygonSpriteBatch): Unit = {
-    batch.setColor(Color.WHITE)
+    batch.setColor(0.2f, 0f, 0f, 1)
     batch.draw(
       icon,
       (Geometry.ScreenWidth - (Geometry.ScreenHeight)) / 2,
       0,
+      Geometry.ScreenHeight / 2,
+      Geometry.ScreenHeight / 2,
       Geometry.ScreenHeight,
-      Geometry.ScreenHeight
+      Geometry.ScreenHeight,
+      1,
+      1,
+      rot,
+      0,
+      0,
+      128,
+      128,
+      false,
+      false
     )
 
     Text.draw(
