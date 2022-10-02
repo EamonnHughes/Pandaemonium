@@ -33,14 +33,7 @@ class GameControl(game: Game) extends IconAdapter(Nil) {
     } else {
       game.mouseDown = false
 
-      var locX = ((screenX / 48).floor) * 48
-      var locY =
-        (((Geometry.ScreenHeight - screenY) / (96 / 2)).floor) * 96 + locX % 96
-      if (game.cubes.exists(cube => cube.loc == Vec2(locX, locY))) {
-        game.cubes = game.cubes.filterNot(cube => cube.loc == Vec2(locX, locY))
-      } else {
-        game.cubes = Cube(locX, locY) :: game.cubes
-      }
+      game.player.build(screenX, screenY)
     }
     true
   }

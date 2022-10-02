@@ -10,6 +10,7 @@ import org.scalanon.pandaemonium.util.TextureWrapper
 case class Player(game: Game) extends Entity {
   def PlayerWalk: TextureWrapper  = AssetLoader.image("PlayerWalkSheet.png")
   def PlayerStill: TextureWrapper = AssetLoader.image("PlayerStillSheet.png")
+  var stone                       = 10
   var direction: Vec2             = Vec2(0, 0)
   var state: Player.Action        = Player.still
   def y: Float                    = loc.y
@@ -25,7 +26,22 @@ case class Player(game: Game) extends Entity {
   var loc: Vec2                   = Vec2(Geometry.ScreenWidth / 2, Geometry.ScreenHeight / 2)
   def dir: Float = {
     MathUtils
-      .atan2(game.mouseLoc.y - loc.y / 2, game.mouseLoc.x - loc.x)
+      .atan2((game.mouseLoc.y * 2) - (loc.y), game.mouseLoc.x - loc.x)
+  }
+  def build(screenX: Float, screenY: Float) {
+    var locX = ((screenX / 48).floor) * 48
+    var locY =
+      (((Geometry.ScreenHeight - screenY) / (96 / 2)).floor) * 96 + locX % 96
+    if (game.cubes.exists(cube => cube.loc == Vec2(locX, locY))) {
+      game.cubes = game.cubes.filterNot(cube => cube.loc == Vec2(locX, locY))
+      stone += 1
+
+    } else {
+      if (stone > 0) {
+        game.cubes = Cube(locX, locY) :: game.cubes
+        stone -= 1
+      }
+    }
   }
   def dirAn: Int = {
     var dirD = dir.degrees

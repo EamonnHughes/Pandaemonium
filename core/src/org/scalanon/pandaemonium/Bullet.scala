@@ -25,8 +25,15 @@ case class Bullet(game: Game) extends Entity {
     batch.setColor(Color.WHITE)
   }
   def update(delta: Float) = {
-    loc.x += Math.cos(direction).toFloat * delta * 2240
-    loc.y += Math.sin(direction).toFloat * delta * 2240
+    loc.x += Math.cos(direction).toFloat * delta * 700
+    loc.y += Math.sin(direction).toFloat * delta * 700
+    game.debris.foreach(debri => {
+      if (debri.loc.manhattanDistance(loc) / Pandaemonium.screenPixel <= 16) {
+        game.debris = game.debris.filterNot(d => d eq debri)
+        game.bullets = game.bullets.filterNot(b => b eq this)
+        game.player.stone += 1
+      }
+    })
   }
   def y: Float = loc.y
   def x: Float = loc.x

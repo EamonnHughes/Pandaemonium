@@ -14,70 +14,72 @@ class Game() extends Scene {
   var mouseLoc: Vec2    = Vec2(0, 0)
   var bullets           = List.empty[Bullet]
   var mouseDown         = false
-  var cubes: List[Cube] = List(
-    Cube(
+  var cubes: List[Cube] = List.empty
+
+  var debris: List[Debris] = List(
+    Debris(
       Pandaemonium.screenPixel * 1 * 16,
       Pandaemonium.screenPixel * 5 * 16
     ),
-    Cube(
+    Debris(
       Pandaemonium.screenPixel * 2 * 16,
       Pandaemonium.screenPixel * 4 * 16
     ),
-    Cube(
+    Debris(
       Pandaemonium.screenPixel * 2 * 16,
       Pandaemonium.screenPixel * 6 * 16
     ),
-    Cube(
+    Debris(
       Pandaemonium.screenPixel * 3 * 16,
       Pandaemonium.screenPixel * 3 * 16
     ),
-    Cube(
+    Debris(
       Pandaemonium.screenPixel * 3 * 16,
       Pandaemonium.screenPixel * 7 * 16
     ),
-    Cube(
+    Debris(
       Pandaemonium.screenPixel * 4 * 16,
       Pandaemonium.screenPixel * 2 * 16
     ),
-    Cube(
+    Debris(
       Pandaemonium.screenPixel * 4 * 16,
       Pandaemonium.screenPixel * 8 * 16
     ),
-    Cube(
+    Debris(
       Pandaemonium.screenPixel * 5 * 16,
       Pandaemonium.screenPixel * 1 * 16
     ),
-    Cube(
+    Debris(
       Pandaemonium.screenPixel * 5 * 16,
       Pandaemonium.screenPixel * 9 * 16
     ),
-    Cube(
+    Debris(
       Pandaemonium.screenPixel * 6 * 16,
       Pandaemonium.screenPixel * 2 * 16
     ),
-    Cube(
+    Debris(
       Pandaemonium.screenPixel * 6 * 16,
       Pandaemonium.screenPixel * 8 * 16
     ),
-    Cube(
+    Debris(
       Pandaemonium.screenPixel * 7 * 16,
       Pandaemonium.screenPixel * 3 * 16
     ),
-    Cube(
+    Debris(
       Pandaemonium.screenPixel * 8 * 16,
       Pandaemonium.screenPixel * 4 * 16
     ),
-    Cube(
+    Debris(
       Pandaemonium.screenPixel * 9 * 16,
       Pandaemonium.screenPixel * 5 * 16
     )
   )
-  val control           = new GameControl(this)
+  val control              = new GameControl(this)
 
-  var player: Player         = Player(this)
-  var state: State           = PlayState
+  var player: Player = Player(this)
+  var state: State   = PlayState
   def everything: List[Entity] = {
-    (player :: cubes ::: bullets)
+    (player :: cubes ::: bullets ::: debris)
       .sortBy(e => -e.y)
   }
   override def init(): GameControl = {
@@ -95,21 +97,25 @@ class Game() extends Scene {
       case DieState  => None
     }
   }
+
   def Square: TextureWrapper = AssetLoader.image("square.png")
   def mLoc: TextureWrapper   = AssetLoader.image("Mloc.png")
 
   override def render(batch: PolygonSpriteBatch): Unit = {
+
     batch.setColor(Color.WHITE)
+
     batch.draw(Square, 0, 0, Geometry.ScreenWidth, Geometry.ScreenHeight)
-    everything.foreach(e => e.draw(batch))
+
     Text.draw(
       batch,
-      Text.tinyFont,
-      Color.WHITE,
-      s"PANDAEMONIUM v0.1",
-      l =>
-        (Geometry.ScreenWidth - l.width - Geometry.Dimension / 4) -> (l.height + Geometry.Dimension / 4)
+      Text.mediumFont,
+      Color.BLACK,
+      player.stone.toString,
+      l => (20f) -> (Geometry.ScreenHeight - 20f)
     )
+    everything.foreach(e => e.draw(batch))
+
     if (mouseDown) {
       var locX = ((mouseLoc.x / 16 / Pandaemonium.screenPixel).floor) * 16
       var locY = {
