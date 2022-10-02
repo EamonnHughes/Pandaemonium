@@ -14,9 +14,25 @@ class GameControl(game: Game) extends IconAdapter(Nil) {
       pointer: Int,
       button: Int
   ): Boolean = {
+    if (button == 1) {
+      game.mouseDown = true
+      game.mouseLoc.x = screenX
+      game.mouseLoc.y = Geometry.ScreenHeight - screenY
+    }
+    true
+  }
+
+  override def touchUp(
+      screenX: Int,
+      screenY: Int,
+      pointer: Int,
+      button: Int
+  ): Boolean = {
     if (button == 0) {
       game.bullets = Bullet(game) :: game.bullets
     } else {
+      game.mouseDown = false
+
       var locX = ((screenX / 48).floor) * 48
       var locY =
         (((Geometry.ScreenHeight - screenY) / (96 / 2)).floor) * 96 + locX % 96
@@ -28,6 +44,7 @@ class GameControl(game: Game) extends IconAdapter(Nil) {
     }
     true
   }
+
   val keysPressed = mutable.Set.empty[Int]
 
   def reset = {
@@ -35,7 +52,21 @@ class GameControl(game: Game) extends IconAdapter(Nil) {
 
   }
 
-  override def mouseMoved(screenX: Int, screenY: Int): Boolean = {
+  override def mouseMoved(
+      screenX: Int,
+      screenY: Int
+  ): Boolean = {
+    game.mouseLoc.x = screenX
+    game.mouseLoc.y = Geometry.ScreenHeight - screenY
+
+    true
+  }
+
+  override def touchDragged(
+      screenX: Int,
+      screenY: Int,
+      pointer: Int
+  ): Boolean = {
     game.mouseLoc.x = screenX
     game.mouseLoc.y = Geometry.ScreenHeight - screenY
 

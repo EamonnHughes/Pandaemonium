@@ -13,6 +13,7 @@ import sun.security.ec.point.ProjectivePoint.Mutable
 class Game() extends Scene {
   var mouseLoc: Vec2    = Vec2(0, 0)
   var bullets           = List.empty[Bullet]
+  var mouseDown         = false
   var cubes: List[Cube] = List(
     Cube(
       Pandaemonium.screenPixel * 1 * 16,
@@ -95,6 +96,7 @@ class Game() extends Scene {
     }
   }
   def Square: TextureWrapper = AssetLoader.image("square.png")
+  def mLoc: TextureWrapper   = AssetLoader.image("Mloc.png")
 
   override def render(batch: PolygonSpriteBatch): Unit = {
     batch.setColor(Color.WHITE)
@@ -108,6 +110,22 @@ class Game() extends Scene {
       l =>
         (Geometry.ScreenWidth - l.width - Geometry.Dimension / 4) -> (l.height + Geometry.Dimension / 4)
     )
+    if (mouseDown) {
+      var locX = ((mouseLoc.x / 16 / Pandaemonium.screenPixel).floor) * 16
+      var locY = {
+        (((mouseLoc.y / Pandaemonium.screenPixel) / (16)).floor) * 16 + (locX % 32) / 2
+      }
+      batch.setColor(Color.RED)
+      batch.draw(
+        mLoc,
+        (locX - 16) * Pandaemonium.screenPixel,
+        (locY - 8) * Pandaemonium.screenPixel,
+        32 * Pandaemonium.screenPixel,
+        16 * Pandaemonium.screenPixel
+      )
+      batch.setColor(Color.WHITE)
+
+    }
   }
 
 }
