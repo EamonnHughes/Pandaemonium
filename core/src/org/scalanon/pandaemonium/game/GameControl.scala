@@ -3,7 +3,7 @@ package org.scalanon.pandaemonium.game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import org.scalanon.pandaemonium.home.IconAdapter
-import org.scalanon.pandaemonium.{Bullet, Geometry, Pandaemonium, Vec2}
+import org.scalanon.pandaemonium.{Bullet, Cube, Geometry, Pandaemonium, Vec2}
 
 import scala.collection.mutable
 
@@ -14,7 +14,18 @@ class GameControl(game: Game) extends IconAdapter(Nil) {
       pointer: Int,
       button: Int
   ): Boolean = {
-    game.bullets = Bullet(game) :: game.bullets
+    if (button == 0) {
+      game.bullets = Bullet(game) :: game.bullets
+    } else {
+      var locX = ((screenX / 48).floor) * 48
+      var locY =
+        (((Geometry.ScreenHeight - screenY) / (96 / 2)).floor) * 96 + locX % 96
+      if (game.cubes.exists(cube => cube.loc == Vec2(locX, locY))) {
+        game.cubes = game.cubes.filterNot(cube => cube.loc == Vec2(locX, locY))
+      } else {
+        game.cubes = Cube(locX, locY) :: game.cubes
+      }
+    }
     true
   }
   val keysPressed = mutable.Set.empty[Int]
