@@ -12,6 +12,7 @@ import sun.security.ec.point.ProjectivePoint.Mutable
 
 class Game() extends Scene {
   var mouseLoc: Vec2    = Vec2(0, 0)
+  var bullets           = List.empty[Bullet]
   var cubes: List[Cube] = List(
     Cube(
       Pandaemonium.screenPixel * 1 * 16,
@@ -75,7 +76,7 @@ class Game() extends Scene {
   var player: Player         = Player(this)
   var state: State           = PlayState
   def everything: List[Entity] = {
-    (player :: cubes)
+    (player :: cubes ::: bullets)
       .sortBy(e => -e.y)
   }
   override def init(): GameControl = {
@@ -85,6 +86,7 @@ class Game() extends Scene {
 
   override def update(delta: Float): Option[Scene] = {
     player.update(delta)
+    bullets.foreach(b => b.update(delta))
     state match {
       case ExitState =>
         Some(new Home)

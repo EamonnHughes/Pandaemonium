@@ -26,16 +26,16 @@ case class Player(game: Game) extends Entity {
   def dir: Float = {
     MathUtils
       .atan2(game.mouseLoc.y - loc.y / 2, game.mouseLoc.x - loc.x)
-      .degrees
   }
   def dirAn: Int = {
-    if (dir < -68 && dir >= -112) { 7 }
-    else if (dir < 112 && dir >= 68) { 6 }
-    else if (dir < 22 && dir >= -22) { 5 }
-    else if (dir < -158 || dir >= 158) { 4 }
-    else if (dir < 68 && dir >= 22) { 3 }
-    else if (dir < 158 && dir >= 112) { 2 }
-    else if (dir < -112 && dir >= -158) { 1 }
+    var dirD = dir.degrees
+    if (dirD < -68 && dirD >= -112) { 7 }
+    else if (dirD < 112 && dirD >= 68) { 6 }
+    else if (dirD < 22 && dirD >= -22) { 5 }
+    else if (dirD < -158 || dirD >= 158) { 4 }
+    else if (dirD < 68 && dirD >= 22) { 3 }
+    else if (dirD < 158 && dirD >= 112) { 2 }
+    else if (dirD < -112 && dirD >= -158) { 1 }
     else { 0 }
   }
   var anTick                      = 0f
@@ -118,7 +118,7 @@ case class Player(game: Game) extends Entity {
   private def canMoveTo(newLoc: Vec2): Boolean = {
     game.everything
       .forall(e =>
-        (e eq this) || newLoc.manhattanDistance(
+        (e eq this) || (e.isInstanceOf[Bullet]) || newLoc.manhattanDistance(
           e.loc
         ) >= Pandaemonium.screenPixel * 32
       )
