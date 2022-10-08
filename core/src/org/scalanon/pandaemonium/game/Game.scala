@@ -3,6 +3,7 @@ package game
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
+import com.badlogic.gdx.math.Matrix4
 import org.scalanon.pandaemonium.Cube
 import org.scalanon.pandaemonium.game.Game._
 import org.scalanon.pandaemonium.home.Home
@@ -15,6 +16,7 @@ class Game() extends Scene {
   var bullets           = List.empty[Bullet]
   var mouseDown         = false
   var cubes: List[Cube] = List.empty
+  val matrix            = new Matrix4()
 
   var debris: List[Debris] = List(
     Debris(
@@ -78,6 +80,11 @@ class Game() extends Scene {
 
   var player: Player = Player(this)
   var state: State   = PlayState
+  def offset: Vec2   =
+    Vec2(Geometry.ScreenWidth / 2, Geometry.ScreenHeight / 2) - Vec2(
+      player.loc.x,
+      player.loc.y / 2
+    )
   def everything: List[Entity] = {
     (player :: cubes ::: bullets ::: debris)
       .sortBy(e => -e.y)
@@ -98,8 +105,9 @@ class Game() extends Scene {
     }
   }
 
-  def Square: TextureWrapper = AssetLoader.image("square.png")
-  def mLoc: TextureWrapper   = AssetLoader.image("Mloc.png")
+  def Square: TextureWrapper   = AssetLoader.image("square.png")
+  def mLoc: TextureWrapper     = AssetLoader.image("Mloc.png")
+  def Isometer: TextureWrapper = AssetLoader.image("Isometer.png")
 
   override def render(batch: PolygonSpriteBatch): Unit = {
 
@@ -113,6 +121,9 @@ class Game() extends Scene {
       Color.BLACK,
       player.stone.toString,
       l => (20f) -> (Geometry.ScreenHeight - 20f)
+    )
+    batch.setTransformMatrix(
+      matrix.setToTranslation(offset.x, offset.y, 0)
     )
     everything.foreach(e => e.draw(batch))
 
@@ -132,6 +143,57 @@ class Game() extends Scene {
       batch.setColor(Color.WHITE)
 
     }
+    batch.setTransformMatrix(matrix.idt())
+
+    batch.setColor(Color.BLUE)
+    batch.draw(
+      Square,
+      Geometry.ScreenWidth - 100 * Pandaemonium.screenPixel,
+      10 * Pandaemonium.screenPixel,
+      100 * Pandaemonium.screenPixel,
+      100 * Pandaemonium.screenPixel
+    )
+    everything
+      .filter(e =>
+        e.loc.manhattanDistance(player.loc) < Geometry.ScreenWidth / 2
+      )
+      .filterNot(e => e.isInstanceOf[Bullet])
+      .foreach(e => {
+        if (e.isInstanceOf[Player]) {
+          batch.setColor(Color.RED)
+        } else {
+          batch.setColor(Color.GREEN)
+        }
+        batch.draw(
+          Isometer,
+          Geometry.ScreenWidth - (100 * Pandaemonium.screenPixel) + (((e.loc.x + offset.x) / (Geometry.ScreenHeight / Pandaemonium.screenPixel)) * Pandaemonium.screenPixel * 20) - (Pandaemonium.screenPixel * 3),
+          (((e.loc.y + offset.y * 2) / (Geometry.ScreenHeight / Pandaemonium.screenPixel)) * Pandaemonium.screenPixel * 20) - (Pandaemonium.screenPixel * 3),
+          Pandaemonium.screenPixel * 6,
+          Pandaemonium.screenPixel * 6
+        )
+      })
+    batch.setColor(Color.LIGHT_GRAY)
+    batch.draw(
+      Square,
+      Geometry.ScreenWidth - 100 * Pandaemonium.screenPixel,
+      0,
+      100 * Pandaemonium.screenPixel,
+      10 * Pandaemonium.screenPixel
+    )
+    batch.draw(
+      Square,
+      Geometry.ScreenWidth - 100 * Pandaemonium.screenPixel,
+      100 * Pandaemonium.screenPixel,
+      100 * Pandaemonium.screenPixel,
+      20 * Pandaemonium.screenPixel
+    )
+    batch.draw(
+      Square,
+      Geometry.ScreenWidth - 110 * Pandaemonium.screenPixel,
+      0,
+      10 * Pandaemonium.screenPixel,
+      120 * Pandaemonium.screenPixel
+    )
   }
 
 }

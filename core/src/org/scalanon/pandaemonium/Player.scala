@@ -31,7 +31,7 @@ case class Player(game: Game) extends Entity {
   def build(screenX: Float, screenY: Float) {
     var locX = ((screenX / 48).floor) * 48
     var locY =
-      (((Geometry.ScreenHeight - screenY) / (96 / 2)).floor) * 96 + locX % 96
+      (((screenY) / (96 / 2)).floor) * 96 + locX % 96
     if (game.cubes.exists(cube => cube.loc == Vec2(locX, locY))) {
       game.cubes = game.cubes.filterNot(cube => cube.loc == Vec2(locX, locY))
       stone += 1
