@@ -5,11 +5,22 @@ import org.scalanon.pandaemonium.game.Game
 
 case class Miner(lX: Float, lY: Float, game: Game) extends Build {
   def y: Float   = lY
-  var cost       = 10
+  var cost       = 5
   def x: Float   = lX
   var stage      = 0
   var loc        = Vec2(x, y)
   var time       = 0f
+  var powered    = false
+  def checkPower: Boolean = {
+    if (
+      game.builds.exists(build => {
+        build.powered && build.isInstanceOf[Generator] && loc
+          .manhattanDistance(build.loc) <= 32 * Pandaemonium.screenPixel
+
+      })
+    ) true
+    else false
+  }
   var UTime      = 0f
   def update(delta: Float) = {
     time += delta

@@ -10,7 +10,7 @@ import org.scalanon.pandaemonium.util.TextureWrapper
 case class Player(game: Game) extends Entity {
   def PlayerWalk: TextureWrapper  = AssetLoader.image("PlayerWalkSheet.png")
   def PlayerStill: TextureWrapper = AssetLoader.image("PlayerStillSheet.png")
-  var stone                       = 0
+  var stone                       = 15
   var direction: Vec2             = Vec2(0, 0)
   var state: Player.Action        = Player.still
   def y: Float                    = loc.y
@@ -53,8 +53,14 @@ case class Player(game: Game) extends Entity {
 
       } else if (building == 1) {
 
-        if (stone >= 10) {
+        if (stone >= 5) {
           game.builds = Miner(locX, locY, game) :: game.builds
+          stone -= 5
+        }
+      } else if (building == 2) {
+
+        if (stone >= 10) {
+          game.builds = Generator(locX, locY, game) :: game.builds
           stone -= 10
         }
       }

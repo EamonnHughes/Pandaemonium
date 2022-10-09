@@ -16,4 +16,6 @@ trait Entity {
 
 trait Build extends Entity {
   var cost: Float
+  var powered: Boolean
+  def checkPower: Boolean
 }

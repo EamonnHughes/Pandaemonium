@@ -93,7 +93,11 @@ class Game() extends Scene {
   }
 
   override def update(delta: Float): Option[Scene] = {
-    everything.foreach(e => e.update(delta))
+    builds.foreach(b => { b.powered = b.checkPower })
+    builds.filter(b => b.powered).foreach(b => b.update(delta))
+    everything
+      .filterNot(e => e.isInstanceOf[Build])
+      .foreach(e => e.update(delta))
     state match {
       case ExitState =>
         Some(new Home)
