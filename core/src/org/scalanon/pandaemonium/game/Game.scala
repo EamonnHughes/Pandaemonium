@@ -12,13 +12,11 @@ import org.scalanon.pandaemonium.util.TextureWrapper
 import sun.security.ec.point.ProjectivePoint.Mutable
 
 class Game() extends Scene {
-  var mouseLoc: Vec2    = Vec2(0, 0)
-  var bullets           = List.empty[Bullet]
-  var mouseDown         = false
-  var cubes: List[Cube] = List.empty
-  val matrix            = new Matrix4()
+  var mouseLoc: Vec2 = Vec2(0, 0)
+  var mouseDown      = false
+  val matrix         = new Matrix4()
 
-  var debris: List[Debris] = List(
+  var builds: List[Build] = List(
     Debris(
       Pandaemonium.screenPixel * 1 * 16,
       Pandaemonium.screenPixel * 5 * 16
@@ -76,7 +74,7 @@ class Game() extends Scene {
       Pandaemonium.screenPixel * 5 * 16
     )
   )
-  val control              = new GameControl(this)
+  val control             = new GameControl(this)
 
   var player: Player = Player(this)
   var state: State   = PlayState
@@ -86,7 +84,7 @@ class Game() extends Scene {
       player.loc.y / 2
     )
   def everything: List[Entity] = {
-    (player :: cubes ::: bullets ::: debris)
+    (player :: builds)
       .sortBy(e => -e.y)
   }
   override def init(): GameControl = {
@@ -95,8 +93,7 @@ class Game() extends Scene {
   }
 
   override def update(delta: Float): Option[Scene] = {
-    player.update(delta)
-    bullets.foreach(b => b.update(delta))
+    everything.foreach(e => e.update(delta))
     state match {
       case ExitState =>
         Some(new Home)
@@ -157,7 +154,6 @@ class Game() extends Scene {
       .filter(e =>
         e.loc.manhattanDistance(player.loc) < Geometry.ScreenWidth / 2
       )
-      .filterNot(e => e.isInstanceOf[Bullet])
       .foreach(e => {
         if (e.isInstanceOf[Player]) {
           batch.setColor(Color.RED)

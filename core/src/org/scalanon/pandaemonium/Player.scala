@@ -10,7 +10,7 @@ import org.scalanon.pandaemonium.util.TextureWrapper
 case class Player(game: Game) extends Entity {
   def PlayerWalk: TextureWrapper  = AssetLoader.image("PlayerWalkSheet.png")
   def PlayerStill: TextureWrapper = AssetLoader.image("PlayerStillSheet.png")
-  var stone                       = 10
+  var stone                       = 0
   var direction: Vec2             = Vec2(0, 0)
   var state: Player.Action        = Player.still
   def y: Float                    = loc.y
@@ -28,18 +28,35 @@ case class Player(game: Game) extends Entity {
     MathUtils
       .atan2((game.mouseLoc.y * 2) - (loc.y), game.mouseLoc.x - loc.x)
   }
+  var building: Int               = 0
   def build(screenX: Float, screenY: Float) {
     var locX = ((screenX / 48).floor) * 48
-    var locY =
+    var locY = {
       (((screenY) / (96 / 2)).floor) * 96 + locX % 96
-    if (game.cubes.exists(cube => cube.loc == Vec2(locX, locY))) {
-      game.cubes = game.cubes.filterNot(cube => cube.loc == Vec2(locX, locY))
-      stone += 1
+
+    }
+    if (game.builds.exists(cube => cube.loc == Vec2(locX, locY))) {
+      game.builds.foreach(b => {
+        if (b.loc == Vec2(locX, locY)) {
+          stone += b.cost.toInt
+          game.builds = game.builds.filterNot(bu => bu eq b)
+        }
+      })
 
     } else {
-      if (stone > 0) {
-        game.cubes = Cube(locX, locY) :: game.cubes
-        stone -= 1
+      if (building == 0) {
+
+        if (stone > 0) {
+          game.builds = Cube(locX, locY) :: game.builds
+          stone -= 1
+        }
+
+      } else if (building == 1) {
+
+        if (stone >= 10) {
+          game.builds = Miner(locX, locY, game) :: game.builds
+          stone -= 10
+        }
       }
     }
   }
@@ -134,7 +151,7 @@ case class Player(game: Game) extends Entity {
   private def canMoveTo(newLoc: Vec2): Boolean = {
     game.everything
       .forall(e =>
-        (e eq this) || (e.isInstanceOf[Bullet]) || newLoc.manhattanDistance(
+        (e eq this) || newLoc.manhattanDistance(
           e.loc
         ) >= Pandaemonium.screenPixel * 32
       )

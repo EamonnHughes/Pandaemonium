@@ -2,10 +2,12 @@ package org.scalanon.pandaemonium
 
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 
-case class Cube(lX: Float, lY: Float) extends Entity {
-  def y: Float   = lY
-  def x: Float   = lX
-  var loc        = Vec2(x, y)
+case class Cube(lX: Float, lY: Float) extends Build {
+  var cost: Float = 2
+  def y: Float    = lY
+  def x: Float    = lX
+  var loc         = Vec2(x, y)
+  def update(delta: Float) = {}
   def draw(batch: PolygonSpriteBatch): Unit = {
     batch.draw(
       cubeSprite,
@@ -15,5 +17,5 @@ case class Cube(lX: Float, lY: Float) extends Entity {
       Pandaemonium.screenPixel * 64
     )
   }
-  def cubeSprite = AssetLoader.image("Cube.png")
+  def cubeSprite  = AssetLoader.image("Cube.png")
 }

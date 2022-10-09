@@ -3,7 +3,7 @@ package org.scalanon.pandaemonium.game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import org.scalanon.pandaemonium.home.IconAdapter
-import org.scalanon.pandaemonium.{Bullet, Cube, Geometry, Pandaemonium, Vec2}
+import org.scalanon.pandaemonium.{Cube, Geometry, Pandaemonium, Vec2}
 
 import scala.collection.mutable
 
@@ -28,9 +28,8 @@ class GameControl(game: Game) extends IconAdapter(Nil) {
       pointer: Int,
       button: Int
   ): Boolean = {
-    if (button == 0) {
-      game.bullets = Bullet(game) :: game.bullets
-    } else {
+    if (button == 1) {
+
       game.mouseDown = false
 
       game.player.build(
@@ -72,6 +71,12 @@ class GameControl(game: Game) extends IconAdapter(Nil) {
   override def keyDown(keycode: Int): Boolean = {
     if (keycode == Keys.ESCAPE || keycode == Keys.BACK) {
       Gdx.app.exit()
+    }
+    if (keycode == Keys.NUM_1) {
+      game.player.building = 0
+    } else if (keycode == Keys.NUM_2) {
+
+      game.player.building = 1
     }
 
     keysPressed.add(keycode)
