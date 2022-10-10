@@ -11,6 +11,7 @@ case class Player(game: Game) extends Entity {
   def PlayerWalk: TextureWrapper  = AssetLoader.image("PlayerWalkSheet.png")
   def PlayerStill: TextureWrapper = AssetLoader.image("PlayerStillSheet.png")
   var stone                       = 15
+  var oil                         = 20
   var direction: Vec2             = Vec2(0, 0)
   var state: Player.Action        = Player.still
   def y: Float                    = loc.y
@@ -58,6 +59,12 @@ case class Player(game: Game) extends Entity {
           stone -= 5
         }
       } else if (building == 2) {
+
+        if (stone >= 5) {
+          game.builds = Oiler(locX, locY, game) :: game.builds
+          stone -= 5
+        }
+      } else if (building == 3) {
 
         if (stone >= 10) {
           game.builds = Generator(locX, locY, game) :: game.builds

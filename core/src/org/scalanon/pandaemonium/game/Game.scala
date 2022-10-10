@@ -120,7 +120,7 @@ class Game() extends Scene {
       batch,
       Text.mediumFont,
       Color.BLACK,
-      player.stone.toString,
+      s"${player.stone.toString}\n${player.oil.toString}",
       l => (20f) -> (Geometry.ScreenHeight - 20f)
     )
     batch.setTransformMatrix(
