@@ -83,6 +83,9 @@ class GameControl(game: Game) extends IconAdapter(Nil) {
     } else if (keycode == Keys.NUM_4) {
 
       game.player.building = 3
+    } else if (keycode == Keys.NUM_5) {
+
+      game.player.building = 4
     }
 
     keysPressed.add(keycode)

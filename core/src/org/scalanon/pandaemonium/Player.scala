@@ -70,6 +70,12 @@ case class Player(game: Game) extends Entity {
           game.builds = Generator(locX, locY, game) :: game.builds
           stone -= 10
         }
+      } else if (building == 4) {
+
+        if (stone >= 10) {
+          game.builds = Relay(locX, locY, game) :: game.builds
+          stone -= 10
+        }
       }
     }
   }

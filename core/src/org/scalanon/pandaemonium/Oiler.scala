@@ -14,7 +14,8 @@ case class Oiler(lX: Float, lY: Float, game: Game) extends Build {
   def checkPower: Boolean = {
     if (
       game.builds.exists(build => {
-        build.powered && build.isInstanceOf[Generator] && loc
+        build.powered && (build.isInstanceOf[Generator] || build
+          .isInstanceOf[Relay]) && loc
           .manhattanDistance(build.loc) <= 32 * Pandaemonium.screenPixel
 
       })
