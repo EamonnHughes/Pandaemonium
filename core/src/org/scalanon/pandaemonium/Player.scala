@@ -31,11 +31,9 @@ case class Player(game: Game) extends Entity {
   }
   var building: Int               = 0
   def build(screenX: Float, screenY: Float) {
-    var locX = ((screenX / 48).floor) * 48
-    var locY = {
-      (((screenY) / (96 / 2)).floor) * 96 + locX % 96
+    var locX = Geometry.mouseGridLoc(Vec2(screenX, screenY), game.offset).x
+    var locY = Geometry.mouseGridLoc(Vec2(screenX, screenY), game.offset).y
 
-    }
     if (game.builds.exists(cube => cube.loc == Vec2(locX, locY))) {
       game.builds.foreach(b => {
         if (b.loc == Vec2(locX, locY)) {

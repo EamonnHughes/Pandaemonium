@@ -16,8 +16,8 @@ class GameControl(game: Game) extends IconAdapter(Nil) {
   ): Boolean = {
     if (button == 1) {
       game.mouseDown = true
-      game.mouseLoc.x = screenX - game.offset.x
-      game.mouseLoc.y = Geometry.ScreenHeight - screenY - game.offset.y
+      game.mouseLoc.x = screenX
+      game.mouseLoc.y = Geometry.ScreenHeight - screenY
     }
     true
   }
@@ -51,8 +51,8 @@ class GameControl(game: Game) extends IconAdapter(Nil) {
       screenX: Int,
       screenY: Int
   ): Boolean = {
-    game.mouseLoc.x = screenX - game.offset.x
-    game.mouseLoc.y = Geometry.ScreenHeight - screenY - game.offset.y
+    game.mouseLoc.x = screenX
+    game.mouseLoc.y = Geometry.ScreenHeight - screenY
 
     true
   }
@@ -62,8 +62,8 @@ class GameControl(game: Game) extends IconAdapter(Nil) {
       screenY: Int,
       pointer: Int
   ): Boolean = {
-    game.mouseLoc.x = screenX - game.offset.x
-    game.mouseLoc.y = Geometry.ScreenHeight - screenY - game.offset.y
+    game.mouseLoc.x = screenX
+    game.mouseLoc.y = Geometry.ScreenHeight - screenY
 
     true
   }

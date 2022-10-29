@@ -129,15 +129,15 @@ class Game() extends Scene {
     everything.foreach(e => e.draw(batch))
 
     if (mouseDown) {
-      var locX = ((mouseLoc.x / 16 / Pandaemonium.screenPixel).floor) * 16
-      var locY = {
-        (((mouseLoc.y / Pandaemonium.screenPixel) / (16)).floor) * 16 + (locX % 32) / 2
-      }
+      val loc  = Geometry.mouseGridLoc(Vec2(mouseLoc.x, mouseLoc.y), offset)
+      val locX = loc.x
+      val locY = loc.y
+      println(s"$locX $locY")
       batch.setColor(Color.RED)
       batch.draw(
         mLoc,
-        (locX - 16) * Pandaemonium.screenPixel,
-        (locY - 8) * Pandaemonium.screenPixel,
+        locX - 16 * Pandaemonium.screenPixel,
+        locY / 2 - 8 * Pandaemonium.screenPixel,
         32 * Pandaemonium.screenPixel,
         16 * Pandaemonium.screenPixel
       )
